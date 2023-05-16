@@ -1,0 +1,200 @@
+points:
+  key:
+    footprints:
+      choc:
+        type: choc
+        params:
+          hotswap: false
+          reverse: true
+          keycaps: true
+        nets:
+          from: =colrow
+          to: =column_net
+      diode:
+        type: diode
+        nets:
+          from: =colrow
+          to: =row_net
+        anchor:
+          shift: [0, -5]
+  zones:
+    main:
+      key.padding: cy
+      columns:
+        outer2:
+          spread: cx
+          key.column_net: P21
+        outer1:
+          spread: cx
+          key.column_net: P20
+        pinky:
+          spread: cx
+          key.column_net: P19
+        ring:
+          spread: cx
+          key.column_net: P18
+          stagger: 0.66cy
+        middle:
+          spread: cx
+          key.column_net: P15
+          stagger: 0.25cy
+        index:
+          spread: cx
+          key.column_net: P14
+          stagger: -0.25cy
+        inner:
+          spread: cx
+          key.column_net: P16
+          stagger: -0.15cy
+      rows:
+        bottom:
+          row_net: P7
+        home:
+          row_net: P6
+        top:
+          row_net: P5
+        number:
+          row_net: P4
+    thumb:
+      anchor:
+        ref: main_index_bottom
+        shift: [-1.26cx, -1.25cy]
+      columns:
+        outer:
+          key:
+            name: thumb_outer
+            column_net: P19
+          row_overrides:
+            thumb:  
+              bind: [10, 5, 0, 0]
+        omiddle:
+          rotate: -7.5
+          origin: [-10, -10]
+          key:
+            name: thumb_omiddle
+            column_net: P18
+        imiddle:
+          rotate: -10
+          origin: [-10, -10]
+          key:
+            name: thumb_imiddle
+            column_net: P15
+        binner:
+          rotate: -12.5
+          origin: [-10, -10]
+          key:
+            name: thumb_binner
+            column_net: P14
+          row_overrides:
+            thumb:  
+              bind: [0, 0, 0, 2]
+        tinner:
+          rotate: 5
+          spread: -0.6cx
+          stagger: 1.05cy
+          key:
+            name: thumb_tinner
+            column_net: P16
+          row_overrides:
+            thumb:  
+              bind: [0, 0, 0, 0]
+      rows:
+        thumb:
+          row_net: P8
+          bind: [10, 5, 0, 2]
+
+outlines:
+  exports:
+    raw:
+      - type: keys
+        side: left    
+        size: [cx, cy]
+      - type: polygon
+        points:
+          - ref: main_inner_number
+            shift: [0, 0.5cy]
+          - shift: [1.7cx, 0]
+          - ref: main_inner_bottom
+            shift: [1.7cx, 0.5cy]
+          - ref: thumb_binner
+            shift: [0.5cx, 0.5cy]
+          - ref: main_middle_bottom
+
+# curve left of the thumb keys
+      - type: polygon
+        points:
+          - ref: main_pinky_bottom
+            shift: [0.4cx, -0.5cy]
+          - shift: [0.2cx, -0.05cy]
+          - shift: [0.2cx, -0.1cy]
+          - shift: [0.2cx, -0.16cy]
+          - shift: [0.2cx, -0.23cy]
+          - ref: thumb_outer
+            shift: [-0.5cx, -0.5cy]
+          - ref: main_middle_home
+          - ref: main_pinky_home
+
+    rounded_outline:
+      - type: outline
+        name: raw
+        fillet: 1
+
+    switches:
+      main:
+        type: keys
+        side: left
+        size: 14
+        bound: false
+    keycaps:
+      main:
+        type: keys
+        side: left
+        size: [cx, cy]
+        bound: false
+        corner: 0
+
+    outline_and_switches:
+      - rounded_outline
+      - type: keys
+        side: left
+        size: 14
+        bound: false
+        operation: subtract
+
+
+pcbs:
+  neok:
+    outlines:
+      edge:
+        outline: rounded_outline
+        layer: Edge.Cuts
+      keycaps:
+        outline: keycaps
+        layer: Eco1.User
+    footprints:
+      mcu:
+        type: promicro
+        anchor:
+          ref:
+            - main_inner_bottom
+          shift: [1.1cx, 2.4cy]
+          rotate: 270
+      oled:
+        type: oled
+        nets:
+          SDA: P2
+          SCL: P3
+          VCC: VCC
+          GND: GND
+        anchor:
+          ref:
+            - main_inner_bottom
+          shift: [0.766cx, 1.2cy]
+          rotate: 90
+
+
+cases:
+  holes:
+    - name: outline_and_switches
+      extrude: 1
+      shift: [-75, 0, 0]
